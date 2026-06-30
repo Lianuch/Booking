@@ -1,17 +1,13 @@
 import { Request, Response, Router } from "express";
-import { UserService } from "./user.service.js";
 import { createUserDto } from "./create-user.dto.js";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { validate } from "../middlewares/validate.middleware.js";
+import { userService } from "../container/index.js";
 
 const router = Router();
-const userService = new UserService();
 
-router.post(
-  "/",
-  validate(createUserDto),
-  asyncHandler(async (req: Request, res: Response) => {
-    const user = await userService.createUser(req.body);
+router.post("/", validate(createUserDto), asyncHandler(async (req: Request, res: Response) => {
+    const user = await userService.registration(req.body);
     return res.status(201).json(user);
   }),
 );
