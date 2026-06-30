@@ -3,12 +3,19 @@ import { createUserDto } from "./create-user.dto.js";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { userService } from "../container/index.js";
+import { logger } from "../utils/log.js";
 
 const router = Router();
 
 router.post("/", validate(createUserDto), asyncHandler(async (req: Request, res: Response) => {
+  try {
     const user = await userService.registration(req.body);
+    res.cookie("refreshToken", user.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
     return res.status(201).json(user);
+  } catch (e: any) {
+   logger.error("Failed to register user",e.message);
+  } 
+  
   }),
 );
 

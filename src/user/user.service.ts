@@ -9,6 +9,8 @@ import { AppError } from "../utils/app-error.middleware.js";
 import { v4 as uuidv4 } from "uuid";
 import { EmailService } from "../email/email.service.js";
 import { TokenService } from "../token/token.service.js";
+import { UserDto } from "./user.dto.js";
+import { AuthReponse } from "./auth-response.js";
 
 export class UserService {
   constructor(
@@ -31,7 +33,7 @@ export class UserService {
     return user;
   }
 
-  async registration(data: CreateUserDto): Promise<User> {
+  async registration(data: CreateUserDto): Promise<AuthReponse> {
     const existingUser = await prisma.user.findUnique({
       where: {
         email: data.email,
@@ -56,8 +58,15 @@ export class UserService {
     });
 
     await this.emailService.sendActivationMail(data.email, activationLink);
+    
+    const userDto = new UserDto(user)
 
-    return user;
+    const tokens = this.tokenService.generateTokens({...userDto})
+    await this.tokenService.saveToken(user.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
   }
 
   async login() {
