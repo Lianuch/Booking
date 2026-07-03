@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./user/user.controller.js";
+import authRouter from "./auth/auth.controller.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -19,13 +20,12 @@ async function main() {
     app.use(cookieParser());
     app.use(cors());
 
+    app.use("/api/auth", authRouter);
     app.use("/api/user", userRouter);
     app.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.send("Backend is running");
     });
-    // app.all("/*", (req: Request, res: Response) => {
-    //     res.status(404).json({message: "Route not found"});
-    // })
+   
 
     app.use(errorMiddleware);
 

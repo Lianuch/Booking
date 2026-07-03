@@ -7,34 +7,21 @@ import { logger } from "../utils/log.js";
 
 const router = Router();
 
-router.post("/", validate(createUserDto), asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const user = await userService.registration(req.body);
-    res.cookie("refreshToken", user.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
-    return res.status(201).json(user);
-  } catch (e: any) {
-   logger.error("Failed to register user",e.message);
-  } 
-  
-  }),
-);
-
+//get all users
 router.get("/", asyncHandler( async (req: Request, res: Response) => {
   const users = await userService.getUsers();
   return res.status(200).json(users);
 }));
 
-
+//get user by id
 router.get("/:id", asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
   const user = await userService.getUserById(id);
   return res.status(200).json(user);
 }))
 
-router.get("/activate/:link", asyncHandler(async (req: Request, res: Response) => {
-  const { link } = req.params as { link: string };
-}));
 
+//delete user by id
 router.delete("/:id", asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
 
@@ -43,6 +30,7 @@ router.delete("/:id", asyncHandler(async (req: Request, res: Response) => {
     return res.status(200).json({message: "User deleted"});
 }))
 
+//update user by id
 router.put("/:id", asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
   const user = await userService.updateUser(id, req.body);

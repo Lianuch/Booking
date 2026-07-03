@@ -1,16 +1,15 @@
 import { User } from "@prisma/client";
-import { IUser } from "./user.type.js";
 import { prisma } from "../prisma.js";
 import { logger } from "../utils/log.js";
-import bcrypt from "bcrypt";
 import { CreateUserDto } from "./create-user.dto.js";
 import { UpdateUserDto } from "./update-user.dto.js";
 import { AppError } from "../utils/app-error.middleware.js";
-import { v4 as uuidv4 } from "uuid";
 import { EmailService } from "../email/email.service.js";
 import { TokenService } from "../token/token.service.js";
 import { UserDto } from "./user.dto.js";
 import { AuthReponse } from "./auth-response.js";
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcrypt";
 
 export class UserService {
   constructor(
@@ -57,7 +56,7 @@ export class UserService {
       },
     });
 
-    await this.emailService.sendActivationMail(data.email, `${process.env.API_URL}/api/activate/${activationLink}`);
+    await this.emailService.sendActivationMail(data.email, `${process.env.API_URL}/api/auth/activate/${activationLink}`);
     
     const userDto = new UserDto(user)
     const tokens = this.tokenService.generateTokens({...userDto})
@@ -67,6 +66,21 @@ export class UserService {
       ...tokens,
       user: userDto
     }
+  }
+
+  async activate(activationLink: string): Promise<void> {
+    const user = await prisma.user.findFirst({
+      where: { activationLink },
+    });
+    if (!user) {
+      logger.warn(`User not found: ${activationLink}`);
+      throw AppError.BadRequest("Invalid activation link");
+    }
+    user.isActivated = true;
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isActivated: true },
+    });
   }
 
   async login() {
