@@ -27,9 +27,11 @@ model User {
 
 model Token {
   id String @unique @id @default(uuid())
-
   userId String @unique
-  user User @relation(fields: [userId], references: [id])
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  
   refreshToken String 
 }
 

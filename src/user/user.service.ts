@@ -60,8 +60,8 @@ export class UserService {
     await this.emailService.sendActivationMail(data.email, activationLink);
     
     const userDto = new UserDto(user)
-
     const tokens = this.tokenService.generateTokens({...userDto})
+    
     await this.tokenService.saveToken(user.id, tokens.refreshToken)
     return {
       ...tokens,
