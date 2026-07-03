@@ -31,6 +31,10 @@ router.get("/:id", asyncHandler(async (req: Request, res: Response) => {
   return res.status(200).json(user);
 }))
 
+router.get("/activate/:link", asyncHandler(async (req: Request, res: Response) => {
+  const { link } = req.params as { link: string };
+}));
+
 router.delete("/:id", asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
 

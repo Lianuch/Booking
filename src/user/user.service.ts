@@ -57,7 +57,7 @@ export class UserService {
       },
     });
 
-    await this.emailService.sendActivationMail(data.email, activationLink);
+    await this.emailService.sendActivationMail(data.email, `${process.env.API_URL}/api/activate/${activationLink}`);
     
     const userDto = new UserDto(user)
     const tokens = this.tokenService.generateTokens({...userDto})
