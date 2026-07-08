@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { userService } from "../container/index.js";
 import { createUserDto } from "../user/create-user.dto.js";
@@ -9,20 +9,15 @@ const router = Router();
 
 //register account
 
-router.post("/register", validate(createUserDto), asyncHandler(async (req: Request, res: Response) => {
-  try {
+router.post("/register", validate(createUserDto), asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = await userService.registration(req.body);
     res.cookie("refreshToken", user.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
     return res.status(201).json(user);
-  } catch (e: any) {
-   logger.error("Failed to register user",e.message);
   } 
-  
-  }),
-);
+));
 
 //activate account
-router.get("/activate/:link", asyncHandler(async (req: Request, res: Response) => {
+router.get("/activate/:link", asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { link } = req.params as { link: string };
     await userService.activate(link);
     return res.redirect(process.env.CLIENT_URL || "http://localhost:5000");
@@ -31,6 +26,13 @@ router.get("/activate/:link", asyncHandler(async (req: Request, res: Response) =
 
 
 
+router.post("/login", asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const {email, password} = req.body;
+  const userData = await userService.login(email, password); 
 
+  res.cookie("refreshToken", userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+
+  return res.status(200).json(userData);
+}))
 
 export default router;

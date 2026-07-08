@@ -10,6 +10,7 @@ import { UserDto } from "./user.dto.js";
 import { AuthReponse } from "./auth-response.js";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
+import { NextFunction } from "express";
 
 export class UserService {
   constructor(
@@ -83,9 +84,30 @@ export class UserService {
     });
   }
 
-  async login() {
-    try {
-    } catch (e: any) {}
+  async login(email:string, password: string) {
+      const userData = await prisma.user.findUnique({
+        where: { email },
+      }) 
+
+      if (!userData) {
+        logger.warn(`User not found: ${email}`);
+        throw AppError.BadRequest("User not found");
+      }
+      const isPassEqualt = await bcrypt.compare(password, userData.password)
+
+      if (!isPassEqualt) {
+        logger.warn(`Invalid password for user: ${email}`);
+        throw AppError.BadRequest("Invalid password");
+      }
+
+      const userDto = new UserDto(userData)
+      const tokens = this.tokenService.generateTokens({...userDto})
+      await this.tokenService.saveToken(userDto.id, tokens.refreshToken)
+      return {
+        ...tokens,
+        user: userDto
+      }
+
   }
 
   async logout() {}
