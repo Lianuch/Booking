@@ -35,4 +35,10 @@ router.post("/login", asyncHandler(async (req: Request, res: Response, next: Nex
   return res.status(200).json(userData);
 }))
 
+router.post("/logout", asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { refreshToken } = req.cookies;
+  const token = await userService.logout(refreshToken);
+  res.clearCookie("refreshToken");
+  return res.status(200).json(token);
+}))
 export default router;

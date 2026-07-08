@@ -110,7 +110,10 @@ export class UserService {
 
   }
 
-  async logout() {}
+  async logout(refreshToken: string) {
+    const token = await this.tokenService.removeToken(refreshToken);
+    return token;
+  }
 
   async deleteUser(id: string): Promise<User> {
     await this.getUserById(id);

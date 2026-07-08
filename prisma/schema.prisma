@@ -32,7 +32,7 @@ model Token {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   
-  refreshToken String 
+  refreshToken String @unique
 }
 
 enum Role{
