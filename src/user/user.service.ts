@@ -19,7 +19,8 @@ export class UserService {
   ) {}
 
   async getUsers(): Promise<User[]> {
-    return await prisma.user.findMany();
+    const users = await prisma.user.findMany();
+    return users;
   }
 
   async getUserById(id: string): Promise<User> {
@@ -57,16 +58,19 @@ export class UserService {
       },
     });
 
-    await this.emailService.sendActivationMail(data.email, `${process.env.API_URL}/api/auth/activate/${activationLink}`);
-    
-    const userDto = new UserDto(user)
-    const tokens = this.tokenService.generateTokens({...userDto})
-    
-    await this.tokenService.saveToken(user.id, tokens.refreshToken)
+    await this.emailService.sendActivationMail(
+      data.email,
+      `${process.env.API_URL}/api/auth/activate/${activationLink}`,
+    );
+
+    const userDto = new UserDto(user);
+    const tokens = this.tokenService.generateTokens({ ...userDto });
+
+    await this.tokenService.saveToken(user.id, tokens.refreshToken);
     return {
       ...tokens,
-      user: userDto
-    }
+      user: userDto,
+    };
   }
 
   async activate(activationLink: string): Promise<void> {
@@ -84,35 +88,59 @@ export class UserService {
     });
   }
 
-  async login(email:string, password: string) {
-      const userData = await prisma.user.findUnique({
-        where: { email },
-      }) 
+  async login(email: string, password: string) {
+    const userData = await prisma.user.findUnique({
+      where: { email },
+    });
 
-      if (!userData) {
-        logger.warn(`User not found: ${email}`);
-        throw AppError.BadRequest("User not found");
-      }
-      const isPassEqualt = await bcrypt.compare(password, userData.password)
+    if (!userData) {
+      logger.warn(`User not found: ${email}`);
+      throw AppError.BadRequest("User not found");
+    }
+    const isPassEqualt = await bcrypt.compare(password, userData.password);
 
-      if (!isPassEqualt) {
-        logger.warn(`Invalid password for user: ${email}`);
-        throw AppError.BadRequest("Invalid password");
-      }
+    if (!isPassEqualt) {
+      logger.warn(`Invalid password for user: ${email}`);
+      throw AppError.BadRequest("Invalid password");
+    }
 
-      const userDto = new UserDto(userData)
-      const tokens = this.tokenService.generateTokens({...userDto})
-      await this.tokenService.saveToken(userDto.id, tokens.refreshToken)
-      return {
-        ...tokens,
-        user: userDto
-      }
-
+    const userDto = new UserDto(userData);
+    const tokens = this.tokenService.generateTokens({ ...userDto });
+    await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
+    return {
+      ...tokens,
+      user: userDto,
+    };
   }
 
   async logout(refreshToken: string) {
     const token = await this.tokenService.removeToken(refreshToken);
     return token;
+  }
+
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw AppError.UnauthorizedError();
+    }
+
+    const userData =  this.tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDB = await this.tokenService.findToken(refreshToken);
+
+    if(!userData || !tokenFromDB) {
+      throw AppError.UnauthorizedError();
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userData.id },
+    });
+
+    const userDto = new UserDto(user as User);
+    const tokens = this.tokenService.generateTokens({ ...userDto });
+    await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
+    return {
+      ...tokens,
+      user: userDto,
+    }
   }
 
   async deleteUser(id: string): Promise<User> {
@@ -138,4 +166,7 @@ export class UserService {
 
     return user;
   }
+
+
+
 }

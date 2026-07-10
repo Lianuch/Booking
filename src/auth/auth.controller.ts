@@ -3,7 +3,6 @@ import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { userService } from "../container/index.js";
 import { createUserDto } from "../user/create-user.dto.js";
 import { validate } from "../middlewares/validate.middleware.js";
-import { logger } from "../utils/log.js";
 const router = Router();
 
 
@@ -24,8 +23,6 @@ router.get("/activate/:link", asyncHandler(async (req: Request, res: Response, n
     
 }));
 
-
-
 router.post("/login", asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const {email, password} = req.body;
   const userData = await userService.login(email, password); 
@@ -41,4 +38,16 @@ router.post("/logout", asyncHandler(async (req: Request, res: Response, next: Ne
   res.clearCookie("refreshToken");
   return res.status(200).json(token);
 }))
+
+
+router.get("/refresh", asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { refreshToken } = req.cookies;
+  const userData = await userService.refresh(refreshToken);
+  res.cookie("refreshToken", userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+  return res.status(200).json(userData);
+}))
+
+
+
+
 export default router;

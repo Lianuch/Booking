@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../utils/app-error.middleware.js";
 import { prisma } from "../prisma.js";
 import { Token } from "@prisma/client";
+import { UserDto } from "../user/user.dto.js";
+import { TokenPayload } from "./token-payload.js";
 export class TokenService {
   generateTokens(payload: any) {
     const access_secret = process.env.JWT_ACCESS_SECRET;
@@ -31,20 +33,46 @@ export class TokenService {
       });
     }
     const token = await prisma.token.create({
-        data:{
-            userId,
-            refreshToken
-        }
-    })
+      data: {
+        userId,
+        refreshToken,
+      },
+    });
     return token;
   }
 
   async removeToken(refreshToken: string) {
     const tokenData = await prisma.token.delete({
       where: { refreshToken },
+    });
+    return tokenData;
+  }
+
+   validateAccessToken(token: string) {
+    try {
+      const userData = jwt.verify(
+        token,
+        process.env.JWT_ACCESS_SECRET as string,
+      );
+
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+   validateRefreshToken(token: string) {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string);
+      return userData as TokenPayload;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async findToken(refreshToken: string){
+    const tokenData = await prisma.token.findUnique({
+      where: { refreshToken },
     })
     return tokenData;
-   
   }
- 
 }
