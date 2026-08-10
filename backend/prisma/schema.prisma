@@ -1,0 +1,41 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @unique @id @default(uuid())
+
+  name String 
+  email String @unique
+  password String 
+
+  isActivated Boolean @default(false)
+  activationLink String
+
+  token Token? 
+
+  role Role @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Token {
+  id String @unique @id @default(uuid())
+  userId String @unique
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  
+  refreshToken String @unique
+}
+
+enum Role{
+  USER 
+  ADMIN
+}
