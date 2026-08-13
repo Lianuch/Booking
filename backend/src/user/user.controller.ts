@@ -6,7 +6,8 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 //get all users
-router.get("/" , authMiddleware, asyncHandler( async (req: Request, res: Response) => {
+// authMiddleware,
+router.get("/" ,  asyncHandler( async (req: Request, res: Response) => {
   const users = await userService.getUsers();
   return res.status(200).json(users);
 }));

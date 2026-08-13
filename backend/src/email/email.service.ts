@@ -18,7 +18,7 @@ export class EmailService {
       const info = await this.transporter.sendMail({
         from: process.env.SMTP_USER,
         to: email,
-        subject: "Account activation on" + process.env.API_URL,
+        subject: "Account activation on" + process.env.CLIENT_URL,
         text: "",
         html: `
                 <div>
