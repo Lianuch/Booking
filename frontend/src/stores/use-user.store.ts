@@ -7,6 +7,7 @@ import axios from "axios";
 
 interface IUser {
   id: string;
+  name: string;
   email: string;
   isActivated: boolean;
 }
@@ -40,7 +41,6 @@ const userStore: StateCreator<
   login: async (email: string, password: string) => {
     try {
       const response = await AuthService.login(email, password);
-      console.log(response);
       localStorage.setItem("token", response.data.accessToken);
       set(
         {

@@ -4,11 +4,21 @@ import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/booking_logo.png";
 import ThemeButton from "../ThemeButton/ThemeButton";
+import { useNavigate } from "react-router-dom";
 const LoginForm: FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const isFormValid = email.trim() !== "" && password.trim() !== "";
+
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    if (!isFormValid) {
+      return;
+    }
+    await loginUser(email, password);
+    navigate("/");
+  };
   return (
     <div className="bg-white  dark:bg-[#111111] text-black dark:text-white shadow-2xl w-170 min-h-212.5 rounded-[50px] p-10 flex flex-col items-center ">
       <img src={logo} alt="Logo" className="w-44 mt-10 mb-10" />
@@ -50,9 +60,7 @@ const LoginForm: FC = () => {
 
         <button
           disabled={!isFormValid}
-          onClick={() => {
-            loginUser(email, password);
-          }}
+          onClick={handleLogin}
           className=" w-full
     h-16
     mt-4
@@ -75,7 +83,10 @@ const LoginForm: FC = () => {
           <div className="flex-1 h-px bg-neutral-700"></div>
         </div>
 
-        <button className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3">
+        <button
+          onClick={() => {}}
+          className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3"
+        >
           <FcGoogle size={24} /> Sign in with Google
         </button>
 

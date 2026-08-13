@@ -3,7 +3,7 @@ import { DoorOpen, Settings, House, Menu } from "lucide-react";
 import ThemeButton from "../ThemeButton/ThemeButton";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, type FC } from "react";
-
+import { logoutUser } from "../../stores/use-user.store";
 const SidebarForm: FC = () => {
   const navigate = useNavigate();
   const menuItems = [
@@ -30,6 +30,10 @@ const SidebarForm: FC = () => {
     setCollapsed(!collapsed);
     setIsOpen(!isOpen);
   };
+  const handleLogout = () => {
+    logoutUser();
+    navigate("/login");
+  }
   return (
     <aside
       className={`
@@ -83,9 +87,8 @@ const SidebarForm: FC = () => {
       <div className="mt-auto flex flex-col gap-3">
         {!collapsed && <ThemeButton />}
 
-        <button className="flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-neutral-800">
+        <button onClick={handleLogout} className="flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-neutral-800">
           <DoorOpen size={24} />
-
           {!collapsed && <span>Sign Out</span>}
         </button>
 

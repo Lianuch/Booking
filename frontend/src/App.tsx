@@ -9,7 +9,7 @@ import {
 } from "./stores/use-user.store";
 import type { IUser } from "./models/response/IUser";
 import { UserService } from "./services/user.service";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import LoginPage from "./pages/Login/LoginPage";
 import Layout from "./components/Layout/Layout";
@@ -40,44 +40,49 @@ function App() {
     }
   }
 
-  // if (isLoading) {
-  //   return <span>Loading...</span>;
-  // }
-  // if (!isAuth) {
-  //   return (
-  //     <div>
-  //       <LoginForm />
-  //     </div>
-  //   );
-  // }
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/bookings" element={<BookingPage />} />
-        <Route path="/settings" element={<SettingPage />} />
-
-      </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/is-auth" element={<IsAuthPage />} />
-      {/* <Route path="/register" element={<LoginForm />} /> */}
-
-      {/* <h1>User authorized: {user?.email}</h1>
-
-      <button onClick={logoutUser}>Logout</button>
-
-      <div>
-        <button onClick={getUsers}>Get Users</button>
-      </div>
-
-      <div>
-        {users.map((user) => (
-          <div key={user.id}>{user.email}</div>
-        ))}
-      </div> */}
+      {!isAuth ? (
+        <>
+          <Route>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Route>
+        </>
+      ) : (
+        <>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/bookings" element={<BookingPage />} />
+            <Route path="/settings" element={<SettingPage />} />
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/is-auth" element={<IsAuthPage />} />
+        </>
+      )}
     </Routes>
   );
 }
 
 export default App;
+
+{/* <Route path="/register" element={<LoginForm />} /> */}
+
+{/* <h1>User authorized: {user?.email}</h1>
+
+<button onClick={logoutUser}>Logout</button>
+
+<div>
+  <button onClick={getUsers}>Get Users</button>
+</div>
+
+<div>
+  {users.map((user) => (
+    <div key={user.id}>{user.email}</div>
+  ))}
+</div> */}

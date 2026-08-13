@@ -1,8 +1,10 @@
 import { Mail } from "lucide-react";
 import avatar from "../../assets/avatar-temp.png";
 import { FcGoogle } from "react-icons/fc";
+import { useUser } from "../../stores/use-user.store";
 
 const SettingsPage = () => {
+const user = useUser();
   return (
     <div className="max-w-4xl mx-auto px-12 py-10">
       <div className="w-full  px-12 py-10">
@@ -16,7 +18,7 @@ const SettingsPage = () => {
           />
 
           <div className="flex flex-col gap-1">
-            <h2 className="text-2xl font-semibold">Name</h2>
+            <h2 className="text-2xl font-semibold">{user.name}</h2>
 
           </div>
         </div>
