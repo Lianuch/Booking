@@ -6,10 +6,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./user/user.controller.js";
 import authRouter from "./auth/auth.controller.js";
+import googleAuthRouter from "./google/google.auth.controller.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 async function main() {
   try {
@@ -24,8 +26,14 @@ async function main() {
     app.use(express.json());
     app.use(cookieParser());
 
+    app.use("/api/auth/google", googleAuthRouter);
     app.use("/api/auth", authRouter);
     app.use("/api/user", userRouter);
+
+    app.get("/", async (req: Request, res: Response) => {
+      const sessionCookie = req.cookies.session;
+    });
+
     app.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.send("Backend is running");
     });

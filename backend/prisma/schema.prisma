@@ -12,10 +12,13 @@ model User {
 
   name String 
   email String @unique
-  password String 
+  password String? 
+  
+  googleId String? @unique
 
   isActivated Boolean @default(false)
-  activationLink String
+  activationLink String?
+
 
   token Token? 
 
@@ -33,6 +36,17 @@ model Token {
   
   
   refreshToken String @unique
+}
+
+model Plans {
+  id String @unique @id @default(uuid())
+
+  duration String 
+  price Int
+  description String
+
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
 }
 
 enum Role{

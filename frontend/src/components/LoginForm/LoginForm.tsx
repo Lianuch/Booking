@@ -36,14 +36,14 @@ const LoginForm: FC = () => {
           }
           value={email}
         />
-        <div className="relative">
           <label className="text-gray-400 text-sm ml-5" htmlFor="password">
             Password
           </label>
+        <div className="relative">
           <input
             id="password"
             type={showPassword ? "text" : "password"}
-            className="bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 mb-2 pr-12 "
+            className="relative bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 pr-12 "
             placeholder="Enter your password"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPassword(e.target.value)
@@ -52,7 +52,7 @@ const LoginForm: FC = () => {
           />
           <button
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-4 top-1/3 -translate-y-1/2 text-gray-400 hover:text-white"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-black dark:text-gray-700 cursor-pointer "
           >
             {showPassword ? <Eye size={24} /> : <EyeOff size={24} />}
           </button>

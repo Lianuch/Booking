@@ -97,9 +97,13 @@ export class UserService {
       logger.warn(`User not found: ${email}`);
       throw AppError.BadRequest("User not found");
     }
-    const isPassEqualt = await bcrypt.compare(password, userData.password);
+    if(!userData.password){
+      logger.warn(`User ${email} has no password`);
+      throw AppError.BadRequest("This account uses Google OAuth");
+    }
+    const isPassEqual = await bcrypt.compare(password, userData.password);
 
-    if (!isPassEqualt) {
+    if (!isPassEqual) {
       logger.warn(`Invalid password for user: ${email}`);
       throw AppError.BadRequest("Invalid password");
     }
