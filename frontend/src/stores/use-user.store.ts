@@ -30,7 +30,7 @@ interface IUserState extends IInitialState, IActions {}
 const initialState: IInitialState = {
   user: null,
   isAuth: false,
-  isLoading: false,
+  isLoading: true,
 };
 
 const userStore: StateCreator<

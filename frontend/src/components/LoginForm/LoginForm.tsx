@@ -2,9 +2,9 @@ import { useState, type FC } from "react";
 import { loginUser } from "../../stores/use-user.store";
 import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/booking_logo.png";
 import ThemeButton from "../ThemeButton/ThemeButton";
-import { useNavigate } from "react-router-dom";
 const LoginForm: FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -19,6 +19,12 @@ const LoginForm: FC = () => {
     await loginUser(email, password);
     navigate("/");
   };
+
+  const handleGoogleLogin =  () => {
+    console.log(import.meta.env.VITE_GOOGLE_LOGIN_URL)
+    window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL
+  };
+
   return (
     <div className="bg-white  dark:bg-[#111111] text-black dark:text-white shadow-2xl w-170 min-h-212.5 rounded-[50px] p-10 flex flex-col items-center ">
       <img src={logo} alt="Logo" className="w-44 mt-10 mb-10" />
@@ -36,9 +42,9 @@ const LoginForm: FC = () => {
           }
           value={email}
         />
-          <label className="text-gray-400 text-sm ml-5" htmlFor="password">
-            Password
-          </label>
+        <label className="text-gray-400 text-sm ml-5" htmlFor="password">
+          Password
+        </label>
         <div className="relative">
           <input
             id="password"
@@ -61,18 +67,7 @@ const LoginForm: FC = () => {
         <button
           disabled={!isFormValid}
           onClick={handleLogin}
-          className=" w-full
-    h-16
-    mt-4
-    rounded-2xl
-    bg-neutral-900
-    text-blue-500
-    font-semibold
-    transition-all
-    enabled:hover:bg-neutral-900
-    enabled:cursor-pointer
-    disabled:opacity-50
-    disabled:cursor-not-allowed"
+          className=" w-full h-16 mt-4 rounded-2xl bg-neutral-900 text-blue-500 font-semibold transition-all enabled:hover:bg-neutral-900 enabled:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Sing In
         </button>
@@ -84,7 +79,7 @@ const LoginForm: FC = () => {
         </div>
 
         <button
-          onClick={() => {}}
+          onClick={handleGoogleLogin}
           className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3"
         >
           <FcGoogle size={24} /> Sign in with Google

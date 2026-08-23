@@ -23,12 +23,16 @@ function App() {
   const user = useUser();
   const [users, setUsers] = useState<IUser[]>([]);
 
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     checkAuth();
+  //   } else {
+  //     useUserStore.setState({ isLoading: false });
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      checkAuth();
-    } else {
-      useUserStore.setState({ isLoading: false });
-    }
+    checkAuth();
   }, []);
 
   async function getUsers() {
@@ -71,9 +75,12 @@ function App() {
 
 export default App;
 
-{/* <Route path="/register" element={<LoginForm />} /> */}
+{
+  /* <Route path="/register" element={<LoginForm />} /> */
+}
 
-{/* <h1>User authorized: {user?.email}</h1>
+{
+  /* <h1>User authorized: {user?.email}</h1>
 
 <button onClick={logoutUser}>Logout</button>
 
@@ -85,4 +92,5 @@ export default App;
   {users.map((user) => (
     <div key={user.id}>{user.email}</div>
   ))}
-</div> */}
+</div> */
+}

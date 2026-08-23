@@ -34,7 +34,7 @@ async function main() {
       const sessionCookie = req.cookies.session;
     });
 
-    app.get("/", (req: Request, res: Response, next: NextFunction) => {
+    app.get("/", (req: Request, res: Response) => {
       res.send("Backend is running");
     });
    
