@@ -39,12 +39,12 @@ model Token {
   refreshToken String @unique
 }
 
-model Plans {
+model Plan {
   id String @unique @id @default(uuid())
 
-  duration String 
+  duration String @unique
   price Int
-  description String
+  description String?
 
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
