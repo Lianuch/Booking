@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   checkAuth,
-  logoutUser,
   useIsAuth,
   useIsLoading,
-  useUser,
-  useUserStore,
+  logoutUser,
+ 
 } from "./stores/use-user.store";
-import type { IUser } from "./models/response/IUser";
-import { UserService } from "./services/user.service";
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import LoginPage from "./pages/Login/LoginPage";
@@ -20,77 +18,43 @@ import RegisterPage from "./pages/Register/RegisterPage";
 function App() {
   const isLoading = useIsLoading();
   const isAuth = useIsAuth();
-  const user = useUser();
-  const [users, setUsers] = useState<IUser[]>([]);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     checkAuth();
-  //   } else {
-  //     useUserStore.setState({ isLoading: false });
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  async function getUsers() {
-    try {
-      const response = await UserService.fetchUsers();
-      setUsers(response.data);
-    } catch (error) {
-      console.log(`Failed to get users: ${error}`);
-    }
-  }
+ useEffect(() => {
+  checkAuth();
+}, []);
 
   if (isLoading) {
-    return <span>Loading...</span>;
+    return <div  className="min-h-screen flex justify-center items-center">
+      <h1 className="text-3xl font-semibold">Loading...</h1>
+    </div>;
   }
 
   return (
-    <Routes>
-      {!isAuth ? (
-        <>
-          <Route>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Route>
-        </>
-      ) : (
-        <>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/bookings" element={<BookingPage />} />
-            <Route path="/settings" element={<SettingPage />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/is-auth" element={<IsAuthPage />} />
-        </>
-      )}
-    </Routes>
+<Routes>
+  {!isAuth ? (
+    <>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/is-auth" element={<IsAuthPage />} />
+
+      <Route
+        path="*"
+        element={<Navigate to="/login" replace />}
+      />
+    </>
+  ) : (
+    <>
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/bookings" element={<BookingPage />} />
+        <Route path="/settings" element={<SettingPage />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </>
+  )}
+</Routes>
   );
 }
 
 export default App;
-
-{
-  /* <Route path="/register" element={<LoginForm />} /> */
-}
-
-{
-  /* <h1>User authorized: {user?.email}</h1>
-
-<button onClick={logoutUser}>Logout</button>
-
-<div>
-  <button onClick={getUsers}>Get Users</button>
-</div>
-
-<div>
-  {users.map((user) => (
-    <div key={user.id}>{user.email}</div>
-  ))}
-</div> */
-}

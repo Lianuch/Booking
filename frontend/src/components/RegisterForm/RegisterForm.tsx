@@ -1,31 +1,52 @@
 import { useState, type FC } from "react";
 import { registerUser } from "../../stores/use-user.store";
 import { FcGoogle } from "react-icons/fc";
-import { Eye, EyeOff } from "lucide-react";
+import { CircleChevronLeft, Eye, EyeOff } from "lucide-react";
+import { continueWithGoogle } from "../../utils/continueWithGoogle";
 import logo from "../../assets/booking_logo.png";
 import ThemeButton from "../ThemeButton/ThemeButton";
+import { useNavigate } from "react-router-dom";
 const RegisterForm: FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const isFormValid = email.trim() !== "" && password.trim() !== "";
+  const navigate = useNavigate();
+
+
   return (
-    <div className="bg-white  dark:bg-[#111111] text-black dark:text-white shadow-2xl w-170 min-h-212.5 rounded-[50px] p-10 flex flex-col items-center ">
+    <div className="bg-white relative dark:bg-[#111111] text-black dark:text-white shadow-2xl w-170 min-h-212.5 rounded-[50px] p-10 flex flex-col items-center ">
+      <div
+        onClick={() => navigate("/login")}
+        className="
+            absolute
+            top-5
+            left-5
+            text-gray-400
+            hover:text-gray-700
+            dark:hover:text-white
+            cursor-pointer
+          "
+      >
+        <CircleChevronLeft size={30} />
+      </div>
       <img src={logo} alt="Logo" className="w-44 mt-10 mb-10" />
       <div className="w-full max-w-130">
-         <div>
-            <label className="text-gray-400 text-sm ml-5" htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              className="bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 mb-2 "
-              placeholder="Enter your name"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
-              }
-              value={name}
-            />
+        <div>
+          <label className="text-gray-400 text-sm ml-5" htmlFor="name">
+            Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            className="bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 mb-2 "
+            placeholder="Enter your name"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setName(e.target.value)
+            }
+            value={name}
+          />
         </div>
         <label className="text-gray-400 text-sm ml-5" htmlFor="email">
           Email
@@ -40,14 +61,14 @@ const RegisterForm: FC = () => {
           }
           value={email}
         />
+        <label className="text-gray-400 text-sm ml-5" htmlFor="password">
+          Password
+        </label>
         <div className="relative">
-          <label className="text-gray-400 text-sm ml-5" htmlFor="password">
-            Password
-          </label>
           <input
             id="password"
             type={showPassword ? "text" : "password"}
-            className="bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 mb-2 pr-12 "
+            className="bg-transparent w-full border border-neutral-700 rounded-xl px-6 py-2 pr-12 "
             placeholder="Enter your password"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPassword(e.target.value)
@@ -56,12 +77,11 @@ const RegisterForm: FC = () => {
           />
           <button
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-4 top-1/3 -translate-y-1/2 text-gray-400 hover:text-white"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-black dark:text-gray-700 cursor-pointer"
           >
             {showPassword ? <Eye size={24} /> : <EyeOff size={24} />}
           </button>
         </div>
-       
 
         <button
           disabled={!isFormValid}
@@ -90,7 +110,10 @@ const RegisterForm: FC = () => {
           <div className="flex-1 h-px bg-neutral-700"></div>
         </div>
 
-        <button className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3">
+        <button
+          onClick={continueWithGoogle}
+          className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3"
+        >
           <FcGoogle size={24} /> Sign in with Google
         </button>
 

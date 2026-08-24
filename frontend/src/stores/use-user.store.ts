@@ -13,7 +13,7 @@ interface IUser {
 }
 
 interface IActions {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<string | null>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
@@ -23,6 +23,7 @@ interface IInitialState {
   user: IUser | null;
   isAuth: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 interface IUserState extends IInitialState, IActions {}
@@ -31,6 +32,7 @@ const initialState: IInitialState = {
   user: null,
   isAuth: false,
   isLoading: true,
+  error: null,
 };
 
 const userStore: StateCreator<
@@ -38,23 +40,37 @@ const userStore: StateCreator<
   [["zustand/devtools", never], ["zustand/persist", unknown]]
 > = (set) => ({
   ...initialState,
-  login: async (email: string, password: string) => {
-    try {
-      const response = await AuthService.login(email, password);
-      localStorage.setItem("token", response.data.accessToken);
-      set(
-        {
-          user: response.data.user,
-          isAuth: true,
-          isLoading: false,
-        },
-        false,
-        "login",
-      );
-    } catch (error) {
-      console.log(`Login error: ${error}`);
-    }
-  },
+
+ login: async (email: string, password: string)=> {
+  set({ error: null });
+
+  try {
+    const response = await AuthService.login(email, password);
+
+    localStorage.setItem("token", response.data.accessToken);
+
+    set(
+      {
+        user: response.data.user,
+        isAuth: true,
+        isLoading: false,
+        error: null,
+      },
+      false,
+      "login",
+    );
+
+    return null;
+  } catch (error) {
+    const message = error.response?.data?.message;
+
+    set({
+      error: message === "User not found" ? "User not found" : "Incorrect email or password",
+      isLoading: false,
+    });
+    return message;
+  }
+},
   register: async (name: string, email: string, password: string) => {
     try {
       const response = await AuthService.register(name, email, password);
@@ -107,6 +123,7 @@ const userStore: StateCreator<
         user: response.data.user,
         isAuth: true,
         isLoading: false,
+        error: null,
       });
     } catch (error) {
       set({
@@ -135,6 +152,7 @@ export const useUserStore = create<IUserState>()(
 export const useUser = () => useUserStore((state) => state.user);
 export const useIsAuth = () => useUserStore((state) => state.isAuth);
 export const useIsLoading = () => useUserStore((state) => state.isLoading);
+export const useAuthError = () => useUserStore((state) => state.error);
 export const registerUser = (name: string, email: string, password: string) =>
   useUserStore.getState().register(name, email, password);
 export const loginUser = (email: string, password: string) =>

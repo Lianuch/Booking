@@ -76,8 +76,6 @@ const IsAuthPage = () => {
           >
             Register
           </button>
-
-        
         </div>
       </div>
     </div>

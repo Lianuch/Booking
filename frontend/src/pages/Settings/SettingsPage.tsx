@@ -2,6 +2,7 @@ import { Mail } from "lucide-react";
 import avatar from "../../assets/avatar-temp.png";
 import { FcGoogle } from "react-icons/fc";
 import { useUser } from "../../stores/use-user.store";
+import { Check } from 'lucide-react';
 
 const SettingsPage = () => {
 const user = useUser();

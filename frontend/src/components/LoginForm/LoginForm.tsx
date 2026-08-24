@@ -1,8 +1,12 @@
-import { useState, type FC } from "react";
-import { loginUser } from "../../stores/use-user.store";
+import {  useState, type FC } from "react";
+import {
+  loginUser,
+  useAuthError,
+} from "../../stores/use-user.store";
 import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { continueWithGoogle } from "../../utils/continueWithGoogle";
 import logo from "../../assets/booking_logo.png";
 import ThemeButton from "../ThemeButton/ThemeButton";
 const LoginForm: FC = () => {
@@ -10,20 +14,20 @@ const LoginForm: FC = () => {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const isFormValid = email.trim() !== "" && password.trim() !== "";
-
+  const authError = useAuthError();
   const navigate = useNavigate();
-  const handleLogin = async () => {
-    if (!isFormValid) {
-      return;
-    }
-    await loginUser(email, password);
-    navigate("/");
-  };
+const handleLogin = async () => {
+  if (!isFormValid) return;
 
-  const handleGoogleLogin =  () => {
-    console.log(import.meta.env.VITE_GOOGLE_LOGIN_URL)
-    window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL
-  };
+  const success = await loginUser(email, password);
+
+  if(success) {
+    navigate("/");
+  }
+  if (success === "User not found") {
+    navigate("/is-auth", { replace: true });
+  }
+};
 
   return (
     <div className="bg-white  dark:bg-[#111111] text-black dark:text-white shadow-2xl w-170 min-h-212.5 rounded-[50px] p-10 flex flex-col items-center ">
@@ -64,6 +68,12 @@ const LoginForm: FC = () => {
           </button>
         </div>
 
+        {authError && authError !== "User not found" && (
+          <div className="mt-4 w-full rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-center text-red-500">
+            <p>{authError}</p>
+          </div>
+        )}
+
         <button
           disabled={!isFormValid}
           onClick={handleLogin}
@@ -79,7 +89,7 @@ const LoginForm: FC = () => {
         </div>
 
         <button
-          onClick={handleGoogleLogin}
+          onClick={continueWithGoogle}
           className="w-full h-16  rounded-2xl cursor-pointer dark:bg-white bg-black  text-white dark:text-black font-semibold flex items-center justify-center gap-3"
         >
           <FcGoogle size={24} /> Sign in with Google

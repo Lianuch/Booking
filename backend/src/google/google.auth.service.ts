@@ -33,7 +33,6 @@ export class GoogleService {
     ) {
       throw AppError.BadRequest("Google user data is missing");
     }
-        console.log(`Google data:`, JSON.stringify(data, null, 2));
 
     return {
       googleId: data.id,
@@ -65,7 +64,8 @@ export class GoogleService {
           isActivated: true,
         },
       });
-    } else if (!user.googleId) {
+    } 
+     if (!user.googleId) {
       user = await prisma.user.update({
         where: {
           id: user.id,
