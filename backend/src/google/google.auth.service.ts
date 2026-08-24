@@ -62,6 +62,8 @@ export class GoogleService {
           email: data.email,
           googleId: data.googleId,
           isActivated: true,
+          authType: "GOOGLE"
+
         },
       });
     } 

@@ -4,13 +4,9 @@ import { AuthService } from "../services/auth.service";
 import { API_URL } from "../http";
 import { type AuthResponse } from "../models/response/authResponse";
 import axios from "axios";
+import type { IUser } from "../models/response/IUser";
 
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  isActivated: boolean;
-}
+
 
 interface IActions {
   login: (email: string, password: string) => Promise<string | null>;

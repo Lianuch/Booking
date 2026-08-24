@@ -1,11 +1,12 @@
 import { Mail } from "lucide-react";
 import avatar from "../../assets/avatar-temp.png";
 import { FcGoogle } from "react-icons/fc";
-import { useUser } from "../../stores/use-user.store";
+import { useIsAuth, useUser } from "../../stores/use-user.store";
 import { Check } from 'lucide-react';
 
 const SettingsPage = () => {
 const user = useUser();
+const isAuth = useIsAuth();
   return (
     <div className="max-w-4xl mx-auto px-12 py-10">
       <div className="w-full  px-12 py-10">
@@ -37,14 +38,15 @@ const user = useUser();
               </div>
 
               <p className="text-xl">Email</p>
+              {isAuth && user?.authType === "EMAIL" && <Check size={24} />}
             </div>
 
             <div className="flex items-center gap-3">
               <div className="w-6 flex justify-center">
                 <FcGoogle size={24} />
               </div>
-
               <p className="text-xl">Sign in with Google</p>
+              {isAuth && user?.googleId && <Check size={24} />}
             </div>
             <div className="w-full h-px bg-neutral-700 mt-4 mb-4" />
 

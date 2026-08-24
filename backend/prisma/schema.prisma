@@ -19,6 +19,7 @@ model User {
   isActivated Boolean @default(false)
   activationLink String?
 
+  authType AuthType @default(EMAIL)
 
   token Token? 
 
@@ -49,7 +50,12 @@ model Plans {
  updatedAt DateTime @updatedAt
 }
 
-enum Role{
+enum Role {
   USER 
   ADMIN
+}
+enum AuthType {
+  EMAIL
+  GOOGLE
+  APPLE
 }
