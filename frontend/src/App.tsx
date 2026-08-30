@@ -15,6 +15,7 @@ import SettingPage from "./pages/Settings/SettingsPage";
 import BookingPage from "./pages/Booking/BookingPage";
 import IsAuthPage from "./pages/IsAuth/IsAuthPage";
 import RegisterPage from "./pages/Register/RegisterPage";
+import AdminPage from "./pages/Admin/AdminPage";
 function App() {
   const isLoading = useIsLoading();
   const isAuth = useIsAuth();
@@ -48,6 +49,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/bookings" element={<BookingPage />} />
         <Route path="/settings" element={<SettingPage />} />
+        <Route path="/admin-panel" element={<AdminPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

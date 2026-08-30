@@ -1,29 +1,12 @@
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import PricingCard from "../PricingCard/PricingCard";
+import { usePlans, getPlans } from "../../stores/use-plan.store";
 
 const PricingCards: FC = () => {
-  const plans = [
-    {
-      duration: "1 Month",
-      description: "Free",
-      price: 5,
-    },
-    {
-      duration: "3 Months",
-      description: "Free",
-      price: 10,
-    },
-    {
-      duration: "6 Months",
-      description: "Free",
-      price: 20,
-    },
-    {
-      duration: "12 Months",
-      description: "Free",
-      price: 30,
-    },
-  ];
+  const plans = usePlans();
+  useEffect(() => {
+    getPlans();
+  })
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {plans.map((plan) => (

@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import {  type FC } from "react";
 import { ArrowRight } from "lucide-react";
 
 interface PricingCardProps {
@@ -21,8 +21,9 @@ const PricingCard: FC<PricingCardProps> = ({
           <p className="text-sm ">{description}</p>
         </div>
 
-        <button className="flex gap-2 w-full border border-gray-400 rounded-xl px-8 py-4 cursor-pointer justify-center">
+        <button  className="flex gap-2 w-full border border-gray-400 rounded-xl px-8 py-4 cursor-pointer justify-center">
           Get <ArrowRight />
+          
         </button>
       </div>
     </div>
