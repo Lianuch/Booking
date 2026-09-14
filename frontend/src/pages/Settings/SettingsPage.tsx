@@ -1,12 +1,20 @@
 import { Mail } from "lucide-react";
 import avatar from "../../assets/avatar-temp.png";
 import { FcGoogle } from "react-icons/fc";
-import { useIsAuth, useUser } from "../../stores/use-user.store";
-import { Check } from 'lucide-react';
+import { deleteAccount, useIsAuth, useUser } from "../../stores/use-user.store";
+import { Check } from "lucide-react";
+import { useState } from "react";
+import DeleteAccount from "../../components/DeleteAccount/DeleteAccount";
 
 const SettingsPage = () => {
-const user = useUser();
-const isAuth = useIsAuth();
+  const user = useUser();
+  const isAuth = useIsAuth();
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const handleDeleteAccount = async (id: string) => {
+    await deleteAccount(id);
+    setShowDeleteModal(false);
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-12 py-10">
       <div className="w-full  px-12 py-10">
@@ -21,7 +29,6 @@ const isAuth = useIsAuth();
 
           <div className="flex flex-col gap-1">
             <h2 className="text-2xl font-semibold">{user.name}</h2>
-
           </div>
         </div>
 
@@ -50,12 +57,21 @@ const isAuth = useIsAuth();
             </div>
             <div className="w-full h-px bg-neutral-700 mt-4 mb-4" />
 
-            <button className="dark:text-black text-white w-1/3 cursor-pointer border border-red-500 py-2 px-4 text-lg rounded-full">
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="dark:text-black text-white w-1/3 cursor-pointer border border-red-500 py-2 px-4 text-lg rounded-full"
+            >
               Delete account
             </button>
           </div>
         </div>
       </div>
+      {showDeleteModal && (
+        <DeleteAccount
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={() => handleDeleteAccount(user.id)}
+        />
+      )}
     </div>
   );
 };

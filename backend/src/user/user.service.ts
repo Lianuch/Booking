@@ -148,8 +148,8 @@ export class UserService {
   }
 
   async deleteUser(id: string): Promise<User> {
-    await this.getUserById(id);
-
+    const user = await this.getUserById(id);
+    await this.emailService.sendDeleteAccountMail(user.email);
     return await prisma.user.delete({
       where: { id },
     });

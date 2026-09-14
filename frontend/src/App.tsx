@@ -3,7 +3,6 @@ import {
   checkAuth,
   useIsAuth,
   useIsLoading,
-  logoutUser,
  
 } from "./stores/use-user.store";
 

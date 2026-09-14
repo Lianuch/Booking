@@ -19,4 +19,7 @@ export class AuthService {
   static async logout(): Promise<void> {
     return $api.post("/auth/logout");
   }
+  static async deleteAccount(id: string): Promise<void> {
+    return $api.delete(`/users/${id}`);
+  }
 }

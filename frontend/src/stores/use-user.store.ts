@@ -13,6 +13,7 @@ interface IActions {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  deleteAccount (id: string): Promise<void>;
 }
 
 interface IInitialState {
@@ -130,6 +131,22 @@ const userStore: StateCreator<
       console.log(error);
     }
   },
+  deleteAccount: async (id: string) => {
+    try {
+      await AuthService.deleteAccount(id);
+      localStorage.removeItem("token");
+      set(
+        {
+          user: null,
+          isAuth: false,
+        },
+        false,
+        "deleteAccount",
+      );
+    } catch (error) {
+            console.log(`Delete account error: ${error}`);
+    }
+  }
 });
 
 export const useUserStore = create<IUserState>()(
@@ -155,3 +172,4 @@ export const loginUser = (email: string, password: string) =>
   useUserStore.getState().login(email, password);
 export const logoutUser = () => useUserStore.getState().logout();
 export const checkAuth = () => useUserStore.getState().checkAuth();
+export const deleteAccount = (id: string) => useUserStore.getState().deleteAccount(id);
