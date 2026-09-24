@@ -39,10 +39,10 @@ const AdminPlanCard: FC<PricingCardProps> = ({
 
   return (
     <>
-      <div className="mt-10 min-h-70 w-full rounded-xl border border-gray-400 bg-[#1d1d1d] p-8">
+      <div className="mt-10 min-h-70 w-full rounded-xl border border-gray-400 bg-[#1d1d1d] dark:bg-white dark:text-black p-8">
         <div className="flex h-full flex-col justify-between gap-4">
           <div>
-            <p className="text-md text-gray-400">{duration}</p>
+            <p className="text-md text-gray-400 dark:text-black">{duration}</p>
 
             <h1 className="my-1 text-2xl">€{price}</h1>
 
@@ -52,14 +52,14 @@ const AdminPlanCard: FC<PricingCardProps> = ({
           <div className="flex justify-between gap-4">
             <button
               onClick={() => setModal("edit")}
-              className="flex w-full cursor-pointer justify-center rounded-xl border border-blue-500 px-8 py-4"
+              className="flex w-full cursor-pointer justify-center rounded-xl border border-blue-500 px-8 py-4 transition-transform duration-200 hover:scale-105"
             >
               Edit
             </button>
 
             <button
               onClick={() => setModal("delete")}
-              className="flex w-full cursor-pointer justify-center rounded-xl border border-red-500 px-8 py-4"
+              className="flex w-full cursor-pointer justify-center rounded-xl border border-red-500 px-8 py-4 transition-transform duration-200 hover:scale-105"
             >
               Delete
             </button>

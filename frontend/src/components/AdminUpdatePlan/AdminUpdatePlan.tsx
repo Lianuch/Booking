@@ -15,8 +15,8 @@ interface AdminUpdatePlanProps {
 
 const AdminUpdatePlan: FC<AdminUpdatePlanProps> = ({editDuration, setEditDuration, editDescription, setEditDescription, editPrice, setEditPrice, onConfirm, onCancel}) => {
   return (
-         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-3xl rounded-xl border border-gray-700 bg-[#1d1d1d] p-8">
+         <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/60">
+          <div className="w-full max-w-3xl rounded-xl border border-gray-700 dark:bg-white dark:text-black bg-[#1d1d1d] p-8">
             <h2 className="text-2xl font-semibold">Edit plan </h2>
             <div className="mt-8 flex gap-4">
               {/* Duration */}
@@ -47,14 +47,14 @@ const AdminUpdatePlan: FC<AdminUpdatePlanProps> = ({editDuration, setEditDuratio
             <div className="mt-8 flex gap-4">
               <button
                 onClick={onCancel}
-                className="w-full rounded-xl border cursor-pointer border-gray-500 px-6 py-3"
+                className="w-full transition-transform duration-200 hover:scale-105 rounded-xl border cursor-pointer border-gray-500 px-6 py-3"
               >
                 Cancel
               </button>
 
                <button
                 onClick={onConfirm}
-                className="w-full rounded-xl border cursor-pointer border-red-500 px-6 py-3 text-red-500"
+                className="w-full transition-transform duration-200 hover:scale-105 rounded-xl border cursor-pointer border-red-500 px-6 py-3 text-red-500"
               >
                 Save
               </button>

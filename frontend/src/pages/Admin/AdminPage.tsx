@@ -19,18 +19,20 @@ const AdminPage = () => {
   return (
     <div className="mx-auto max-w-4xl px-12 py-10">
       <div className="flex flex-col items-center">
-        <h1 className="text-3xl font-semibold">Admin Panel</h1>
+        <h1 className="text-3xl ">
+         Admin Panel
+        </h1>
 
-        <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="mt-8 flex items-center justify-between gap-4 ">
           <button
             onClick={() => setShowPlans((prev) => !prev)}
-            className="text-3xl border border-gray-400 rounded-xl hover:bg-[#1d1d1d]  px-8 py-4 cursor-pointer"
+            className="text-3xl border border-gray-400 rounded-xl dark:hover:bg-white hover:bg-[#1d1d1d]  px-8 py-4 cursor-pointer"
           >
             {showPlans ? "Hide plans" : "Show plans"}
           </button>
           <button
             onClick={() => setAddModal((prev) => !prev)}
-            className="text-3xl border border-gray-400 rounded-xl hover:bg-[#1d1d1d]  px-8 py-4 cursor-pointer"
+            className="text-3xl border border-gray-400 rounded-xl dark:hover:bg-white hover:bg-[#1d1d1d]  px-8 py-4 cursor-pointer"
           >
             Add plan
           </button>
