@@ -1,15 +1,19 @@
-import { TokenPayload } from "../token/token-payload.js";
 import { TokenService } from "../token/token.service.js";
 import { AppError } from "../utils/app-error.middleware.js";
+import { NextFunction, Request, Response, Router } from "express";
 
-export const authMiddleware = (req: any, res: any, next: any) => {
+
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       return next(AppError.UnauthorizedError());
     }
+    const [type, accessToken] = authHeader.split(" ");
+    if (type !== "Bearer" || !accessToken) {
+      return next(AppError.UnauthorizedError());
+    }
 
-    const accessToken = authHeader.split(" ")[1];
     if (!accessToken) {
       return next(AppError.UnauthorizedError());
     }

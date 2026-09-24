@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { prisma } from "../prisma.js";
 import { logger } from "../utils/log.js";
 import { CreateUserDto } from "./create-user.dto.js";
@@ -11,6 +11,7 @@ import { AuthReponse } from "./auth-response.js";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import { NextFunction } from "express";
+import { UserTokenDto } from "./user.token.dto.js";
 
 export class UserService {
   constructor(
@@ -63,9 +64,10 @@ export class UserService {
       `${process.env.API_URL}/api/auth/activate/${activationLink}`,
     );
 
+    const userTokenDto = new UserTokenDto(user);
+    const tokens = this.tokenService.generateTokens(userTokenDto);
+    
     const userDto = new UserDto(user);
-    const tokens = this.tokenService.generateTokens({ ...userDto });
-
     await this.tokenService.saveToken(user.id, tokens.refreshToken);
     return {
       ...tokens,

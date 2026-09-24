@@ -14,5 +14,8 @@ constructor(statusCode: number, message: string, errors = []){
   static BadRequest(message: string, errors = []){
     return new AppError(400, message, errors);
   }
+  static ForbiddenError(){
+    return new AppError(403, "User is not allowed to perform this action");
+  }
 
 }

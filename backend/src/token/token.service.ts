@@ -6,7 +6,7 @@ import { Token } from "@prisma/client";
 import { UserDto } from "../user/user.dto.js";
 import { TokenPayload } from "./token-payload.js";
 export class TokenService {
-  generateTokens(payload: any) {
+  generateTokens(payload: TokenPayload): { accessToken: string; refreshToken: string } {
     const access_secret = process.env.JWT_ACCESS_SECRET;
     const refresh_secret = process.env.JWT_REFRESH_SECRET;
 
@@ -48,19 +48,19 @@ export class TokenService {
     return tokenData;
   }
 
-   validateAccessToken(token: string) {
+   validateAccessToken(token: string): TokenPayload | null {
     try {
       const userData = jwt.verify(
         token,
         process.env.JWT_ACCESS_SECRET as string,
       );
 
-      return userData;
+      return userData as TokenPayload;
     } catch (e) {
       return null;
     }
   }
-   validateRefreshToken(token: string) {
+   validateRefreshToken(token: string): TokenPayload | null {
     try {
       const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string);
       return userData as TokenPayload;
