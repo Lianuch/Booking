@@ -3,7 +3,7 @@ import {
   checkAuth,
   useIsAuth,
   useIsLoading,
- 
+  useUser,
 } from "./stores/use-user.store";
 
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -18,43 +18,48 @@ import AdminPage from "./pages/Admin/AdminPage";
 function App() {
   const isLoading = useIsLoading();
   const isAuth = useIsAuth();
+  const user = useUser();
 
- useEffect(() => {
-  checkAuth();
-}, []);
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   if (isLoading) {
-    return <div  className="min-h-screen flex justify-center items-center">
-      <h1 className="text-3xl font-semibold">Loading...</h1>
-    </div>;
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <h1 className="text-3xl font-semibold">Loading...</h1>
+      </div>
+    );
   }
 
   return (
-<Routes>
-  {!isAuth ? (
-    <>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/is-auth" element={<IsAuthPage />} />
+    <Routes>
+      {!isAuth ? (
+        <>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/is-auth" element={<IsAuthPage />} />
 
-      <Route
-        path="*"
-        element={<Navigate to="/login" replace />}
-      />
-    </>
-  ) : (
-    <>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/bookings" element={<BookingPage />} />
-        <Route path="/settings" element={<SettingPage />} />
-        <Route path="/admin-panel" element={<AdminPage />} />
-      </Route>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </>
+      ) : (
+        <>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/bookings" element={<BookingPage />} />
+            <Route path="/settings" element={<SettingPage />} />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </>
-  )}
-</Routes>
+          {user?.role === "ADMIN" && (
+            <Route path="/admin-panel" element={<AdminPage />} />
+          )}
+
+          </Route>
+
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </>
+      )}
+    </Routes>
   );
 }
 

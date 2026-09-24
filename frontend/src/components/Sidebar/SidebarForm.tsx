@@ -1,9 +1,9 @@
 import logo from "../../assets/booking_logo.png";
-import { DoorOpen, Settings, House, Menu } from "lucide-react";
+import { DoorOpen, Settings, House, Menu, WalletCards, UserStar } from "lucide-react";
 import ThemeButton from "../ThemeButton/ThemeButton";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, type FC } from "react";
-import { logoutUser } from "../../stores/use-user.store";
+import { logoutUser, useUser } from "../../stores/use-user.store";
 const SidebarForm: FC = () => {
   const navigate = useNavigate();
   const menuItems = [
@@ -14,18 +14,24 @@ const SidebarForm: FC = () => {
     },
     {
       name: "Bookings",
-      icon: House,
+      icon: WalletCards,
       path: "/bookings",
     },
-
     {
       name: "Settings",
       icon: Settings,
       path: "/settings",
+    },  
+    {
+      name: "Admin Panel",
+      icon: UserStar,
+      path: "/admin-panel",
+      adminOnly: true,
     },
   ];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const user = useUser();
   const handleToggle = () => {
     setCollapsed(!collapsed);
     setIsOpen(!isOpen);
@@ -67,7 +73,7 @@ const SidebarForm: FC = () => {
       </div>
 
       <nav className="flex flex-col gap-3">
-        {menuItems.map((item) => {
+        {menuItems.filter((item)=> !item.adminOnly || user?.role === "ADMIN").map((item) => {
           const Icon = item.icon;
 
           return (
