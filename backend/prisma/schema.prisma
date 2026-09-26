@@ -22,6 +22,7 @@ model User {
   authType AuthType @default(EMAIL)
 
   token Token? 
+  Payments Payment[]
 
   role Role @default(USER)
 
@@ -45,9 +46,47 @@ model Plan {
   duration String @unique
   price Int
   description String?
+  Payments Payment[]
 
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+}
+
+
+model Payment {
+  id String @unique @id @default(uuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  planId String
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  amount Decimal
+  currency String
+
+  status PaymentStatus @default(PENDING)
+  method PaymentMethod @default(CRYPTO)
+  methodId String? @unique
+
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  CARD
+  CRYPTO
+  PAYPAL
+  STRIPE
 }
 
 enum Role {
